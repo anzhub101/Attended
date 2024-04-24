@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import TabNavigator from './navigation/TabNavigator'; // Adjust this path if necessary
+import TabNavigator from './navigation/TabNavigator'; 
 
 export default function App() {
   return (

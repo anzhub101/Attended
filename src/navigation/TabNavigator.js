@@ -2,7 +2,7 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import ScheduleScreen from '../screens/ScheduleScreen';
-import UserProfileScreen from '../screens/UserProfileScreen';
+import UserProfileScreen from '../screens/UserInfoScreen';
 
 const Tab = createBottomTabNavigator();
 
