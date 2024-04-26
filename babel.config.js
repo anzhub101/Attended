@@ -8,9 +8,8 @@ module.exports = function (api) {
         {
           root: ['./'],
           alias: {
-            '@': './src',
-            // Add other aliases here
-          },
+            "@": "./src", // Alias "@" is set to reference the "src" directory
+          }
         },
       ],
     ],

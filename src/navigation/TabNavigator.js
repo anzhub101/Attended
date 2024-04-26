@@ -9,27 +9,27 @@ const Tab = createBottomTabNavigator();
 const TabIcon = ({ focused, name }) => {
   let iconSource;
   let labelText;
+  let iconOpacity = focused ? 1 : 0.5; // 100% opacity for focused, 50% for unfocused
+
 
   switch (name) {
     case 'Schedule':
-      iconSource = focused
-        ? require('../assets/images/schedule-icon-active.png')
-        : require('../assets/images/schedule-icon.png');
+        iconSource = require('../../assets/images/schedule-icon.jpeg');
+
       labelText = 'Schedule';
       break;
     case 'UserProfile':
-      iconSource = focused
-        ? require('../assets/images/user-profile-icon-active.png')
-        : require('../assets/images/user-profile-icon.png');
+        iconSource = require('../../assets/images/user-profile-icon.jpeg');
+
       labelText = 'User Profile';
       break;
     // ... other cases for more tabs
   }
 
   return (
-    <View style={{ alignItems: 'center' }}>
-      <Image source={iconSource} style={{ width: 24, height: 24 }} />
-      <Text style={{ color: focused ? 'tomato' : 'gray', fontSize: 10 }}>
+    <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+      <Image source={iconSource} style={{ width: 24, height: 24, opacity: iconOpacity}} resizeMode='contain' />
+      <Text style={{ color: focused ? 'black' : 'gray', fontSize: 10, opacity: iconOpacity }}>
         {labelText}
       </Text>
     </View>
@@ -37,20 +37,25 @@ const TabIcon = ({ focused, name }) => {
 };
 
 const TabNavigator = () => {
-  return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused }) => (
-          <TabIcon focused={focused} name={route.name} />
-        ),
-        tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
-      })}
-    >
-      <Tab.Screen name="Schedule" component={ScheduleScreen} />
-      <Tab.Screen name="UserProfile" component={UserProfileScreen} />
-    </Tab.Navigator>
-  );
-}
+    return (
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} name={route.name} />
+          ),
+          tabBarActiveTintColor: 'black',
+          tabBarInactiveTintColor: 'gray',
+          tabBarLabel: () => null, // This hides the default label
+          tabBarStyle: {
+            paddingBottom: 15,
+            height: 90 // Adjust the height as needed
+          },
+        })}
+      >
+        <Tab.Screen name="Schedule" component={ScheduleScreen} />
+        <Tab.Screen name="UserProfile" component={UserProfileScreen} />
+      </Tab.Navigator>
+    );
+  }
 
 export default TabNavigator;
