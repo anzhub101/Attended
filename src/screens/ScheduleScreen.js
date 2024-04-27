@@ -19,6 +19,7 @@ const getInitialDates = (startDate, numberOfDays) => {
   return dates;
 };
 
+
 // Define initial start date
 const startDate = subMonths(new Date(), 6); // 6 months before today
 
@@ -44,24 +45,44 @@ const TimeHeaders = ({ hours }) => {
   );
 };
 
-const DayColumn = ({ date, hours }) => {
-  const formattedDay = format(date, 'E'); // e.g., "Sun"
-  const formattedDate = format(date, 'MMM d'); // e.g., "Feb 19"
+const TimeSlotRowHeaders = ({ hours }) => {
+  return (
+    <View style={styles.timeSlotHeadersContainer}>
+      {hours.map((hour, index) => (
+        <TimeSlot key={index} hour={hour} />
+      ))}
+    </View>
+  );
+};
+const DayColumnContent = ({ date, hours }) => {
+  
   return (
     <View style={[styles.dayColumnWrapper, { width: dayColumnWidth }]}>
-      <Text style={styles.dayColumnHeader}>{`${formattedDay}\n${formattedDate}`}</Text>
-      <View style={styles.dayColumnContainer}>
-        {hours.map((hour, index) => (
-          <TimeSlot key={index} hour={hour} />
-        ))}
-      </View>
+      {hours.slice(8, 22).map((_, index) => (
+        <View key={index} style={styles.timeSlot}>
+        </View>
+      ))}
     </View>
   );
 };
 
+const DayColumn = ({ date }) => {
+  const formattedDay = format(date, 'E'); // e.g., "Sun"
+  const formattedDate = format(date, 'MMM d'); // e.g., "Feb 19"
+
+  return (
+    <View style={[styles.dayColumnWrapper, { width: dayColumnWidth }]}>
+      <Text style={styles.dayColumnHeader}>{`${formattedDay}\n${formattedDate}`}</Text>
+    </View>
+  );
+};
+
+
 const ScheduleScreen = () => {
   const [dates, setDates] = useState(initialDates);
   const hours = Array.from({ length: 24 }, (_, index) => index); // 0AM to 23PM, adjust as needed
+  const columnHeaderHeight = 0; // the height of your day/date header
+
 
   const loadMoreDates = (direction) => {
     if (direction === 'past') {
@@ -79,30 +100,72 @@ const ScheduleScreen = () => {
     const currentOffset = event.nativeEvent.contentOffset.x;
     const closeToStart = currentOffset < 50; // Adjust threshold as needed
 
+
     if (closeToStart) {
       loadMoreDates('past');
     }
   };
 
   return (
-    <View style={{ flex: 1, flexDirection: 'row' }}>
-      <TimeHeaders hours={hours.slice(8, 22)} /> {/* Static header for visible hours 8AM to 9PM */}
-      <FlatList
-        horizontal
-        data={dates}
-        renderItem={({ item }) => <DayColumn date={item} hours={hours} />}
-        keyExtractor={(item, index) => index.toString()}
-        onEndReached={() => loadMoreDates('future')}
-        onEndReachedThreshold={0.5} // Load more when halfway reached to the end
-        onScroll={onScroll}
-      />
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: 'row' }}>
+        {/* Empty top-left corner spacer */}
+        <View style={{ width: 50, height: columnHeaderHeight }} />
+        <FlatList
+          horizontal
+          data={dates}
+          renderItem={({ item }) => <DayColumn date={item} />}
+          keyExtractor={(item, index) => index.toString()}
+          onEndReached={() => loadMoreDates('future')}
+          onEndReachedThreshold={0.5}
+          onScroll={onScroll}
+          ListHeaderComponent={<View style={{ height: columnHeaderHeight }} />} // Placeholder to align headers
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        {/* Static Time Headers on the left */}
+        <View>
+          {hours.slice(8, 22).map((hour, index) => (
+            <View key={index} style={styles.timeHeader}>
+              <Text>{`${hour}:00`}</Text>
+            </View>
+          ))}
+        </View>
+        {/* Scrollable content */}
+        <FlatList
+          horizontal
+          data={dates}
+          renderItem={({ item }) => <DayColumnContent date={item} hours={hours} />}
+          keyExtractor={(item, index) => index.toString()}
+          onEndReached={() => loadMoreDates('future')}
+          onEndReachedThreshold={0.5}
+          onScroll={onScroll}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
     </View>
   );
 
 };
 
 
+
 const styles = StyleSheet.create({
+  dayColumnWrapper: {
+    flexDirection: 'column',
+    borderRightWidth: 1,
+    borderRightColor: 'black', 
+  },
+  timeHeadersContainer: {
+    justifyContent: 'flex-start',
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 10,
+  },
+  timeHeader: {
+    height: timeSlotHeight,
+    justifyContent: 'center',
+  },
   timeHeaderContainer: {
     width: 50, // Width of the time headers, adjust as necessary
     backgroundColor: '#f0f0f0',
@@ -135,11 +198,12 @@ const styles = StyleSheet.create({
   },
 
   timeSlot: {
-    height: timeSlotHeight, // Adjust the height so the desired number of slots fit on the screen
+    // Style for each individual time slot
+    height: timeSlotHeight, // This height should match the height of the time headers
     justifyContent: 'center',
-    paddingLeft: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#ccc', // This adds the separation line between time slots
+    // You may want to add additional styling such as paddingLeft if needed
   },
 });
 
