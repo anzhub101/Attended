@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { format, startOfWeek, addDays } from 'date-fns';
 
-const timeHeaderWidth = 40; // Width for the time header area
+const timeHeaderWidth = 32; // Width for the time header area
 const dayHeaderHeight = 40; // Height for the day header area
 const { width: screenWidth } = Dimensions.get('window');
 const dayColumnWidth = (screenWidth - timeHeaderWidth) / 5; // Width for each day column
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    backgroundColor: '#d3d3d3',  // Dark grey for day headers
   },
   dayHeader: {
     fontWeight: 'bold',
@@ -79,11 +80,13 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    backgroundColor: '#d3d3d3',  // Slightly lighter grey for time headers
   },
   daySlot: {
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   }
 });
+
 
 export default ScheduleScreen;
