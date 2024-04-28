@@ -12,7 +12,7 @@ const timeSlotHeight = 35; // Height for each time slot
 const generateWeekDays = (startDate) => {
   let days = [];
   for (let i = 1; i <= 5; i++) { // 1 for Monday to 5 for Friday
-    days.push(addDays(startOfWeek(startDate, { weekStartsOn: 1 }), i));
+    days.push(addDays(startOfWeek(startDate, { weekStartsOn: 0 }), i));
   }
   return days;
 };
@@ -45,7 +45,7 @@ const ScheduleScreen = () => {
       {/* Day Column Headers */}
       <View style={{ flexDirection: 'row', paddingTop: 5 }}>
         {/* Placeholder for the time column */}
-        <View style={{ width: timeHeaderWidth, height: dayHeaderHeight }} />
+        <View style={{ width: timeHeaderWidth, height: dayHeaderHeight, backgroundColor: '#D3D3D3' }} />
         {/* Day headers */}
         {dates.map((date, index) => (
           <DayColumnHeader key={index} date={date} />
