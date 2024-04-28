@@ -20,7 +20,7 @@ const generateWeekDays = (startDate) => {
 const TimeSlot = ({ hour }) => (
   <View style={{ flexDirection: 'row', height: timeSlotHeight }}>
     <View style={[styles.timeSlot, { width: timeHeaderWidth }]}>
-      <Text>{`${hour}:00`}</Text>
+      <Text>{`${hour}`}</Text>
     </View>
     {Array.from({ length: 5 }).map((_, index) => (
       <View key={index} style={[styles.daySlot, { width: dayColumnWidth }]}>
