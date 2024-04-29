@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { format, startOfWeek, addDays } from 'date-fns';
 
 const timeHeaderWidth = 32; // Width for the time header area
@@ -9,10 +9,10 @@ const dayColumnWidth = (screenWidth - timeHeaderWidth) / 5; // Width for each da
 const timeSlotHeight = 35; // Height for each time slot
 
 // Helper function to generate the weekdays for the current week
-const generateWeekDays = (startDate) => {
+const generateWeekDays = (startDate, daysBefore, daysAfter) => {
   let days = [];
-  for (let i = 1; i <= 5; i++) { // 1 for Monday to 5 for Friday
-    days.push(addDays(startOfWeek(startDate, { weekStartsOn: 0 }), i));
+  for (let i = -daysBefore; i <= daysAfter; i++) {
+    days.push(addDays(startDate, i));
   }
   return days;
 };
@@ -37,25 +37,29 @@ const DayColumnHeader = ({ date }) => (
 );
 
 const ScheduleScreen = () => {
-  const [dates, setDates] = useState(() => generateWeekDays(new Date()));
+  const startDate = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const [dates, setDates] = useState(() => generateDatesRange(startDate, 21, 21));
   const hours = useMemo(() => Array.from({ length: 24 }, (_, index) => index), []);
 
   return (
     <View style={{ flex: 1 }}>
-      {/* Day Column Headers */}
+      {/* Static Header for Time */}
       <View style={{ flexDirection: 'row', paddingTop: 5 }}>
-        {/* Placeholder for the time column */}
         <View style={{ width: timeHeaderWidth, height: dayHeaderHeight, backgroundColor: '#D3D3D3' }} />
-        {/* Day headers */}
-        {dates.map((date, index) => (
-          <DayColumnHeader key={index} date={date} />
-        ))}
+        <ScrollView horizontal showsHorizontalScrollIndicator={true}>
+          {dates.map((date, index) => (
+            <DayColumnHeader key={index} date={date} />
+          ))}
+        </ScrollView>
       </View>
-      {/* FlatList for Time Slots across all day columns */}
+      {/* FlatList for Time Slots, with static time header and scrollable day slots */}
       <FlatList
         data={hours}
         keyExtractor={item => item.toString()}
         renderItem={({ item }) => <TimeSlot hour={item} />}
+        ListHeaderComponent={() => (
+          <View style={{ width: timeHeaderWidth, backgroundColor: '#D3D3D3' }} />  // Placeholder to keep time headers static
+        )}
       />
     </View>
   );
