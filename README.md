@@ -1,4 +1,4 @@
-##Attended
+# Attended
 
 Application developed in React Native to 
 1. Keep track of student class schedules, exams, projects, homeworks etc.
